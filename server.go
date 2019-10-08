@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 )
 
-func main() {
-	server := &PlayerServer{EmptyMemoryPlayerStoreFactory()}
-
-	if err := http.ListenAndServe(":5000", server); err != nil {
-		log.Fatalf("could not listen on port 5000 %v", err)
-	}
-}
-
 type PlayerServer struct {
 	store PlayerStore
+}
+
+type PlayerStore interface {
+	GetPlayerScore(name string) int
+
+	RecordWin(name string)
 }
 
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -42,26 +39,4 @@ func (p *PlayerServer) showScore(w http.ResponseWriter, player string) {
 	}
 
 	fmt.Fprint(w, score)
-}
-
-type PlayerStore interface {
-	GetPlayerScore(name string) int
-
-	RecordWin(name string)
-}
-
-type InMemoryPlayerStore struct {
-	scores map[string]int
-}
-
-func (i *InMemoryPlayerStore) GetPlayerScore(name string) int {
-	return i.scores[name]
-}
-
-func (i *InMemoryPlayerStore) RecordWin(name string) {
-	i.scores[name] = i.scores[name] + 1
-}
-
-func EmptyMemoryPlayerStoreFactory() *InMemoryPlayerStore {
-	return &InMemoryPlayerStore{map[string]int{}}
 }
