@@ -16,7 +16,7 @@ type PlayerStore interface {
 
 	RecordWin(name string)
 
-	GetLeague() []Player
+	GetLeague() League
 }
 
 type Player struct {
