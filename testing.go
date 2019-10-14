@@ -25,6 +25,7 @@ func (s *StubPlayerStore) GetLeague() League {
 	return s.league
 }
 
+
 func AssertPlayerWin(t *testing.T, store *StubPlayerStore, winner string) {
 	t.Helper()
 
