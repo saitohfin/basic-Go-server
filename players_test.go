@@ -18,7 +18,7 @@ func TestGETPlayers(t *testing.T) {
 			"Floyd":  10,
 		}, nil, nil,
 	}
-	server := PlayerServerFactory(&store)
+	server, _:= PlayerServerFactory(&store)
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		request := newGetScoreRequest("Pepper")
@@ -54,7 +54,7 @@ func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{}, nil, nil,
 	}
-	server := PlayerServerFactory(&store)
+	server , _:= PlayerServerFactory(&store)
 
 	t.Run("it records wins on POST", func(t *testing.T) {
 		player := "Pepper"
@@ -86,7 +86,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := StubPlayerStore{nil, nil, wantedLeague}
-		server := PlayerServerFactory(&store)
+		server, _ := PlayerServerFactory(&store)
 
 		request := newLeagueRequest()
 		response := httptest.NewRecorder()
@@ -105,7 +105,7 @@ func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 	defer cleanDatabase()
 	store, err := NewFileSystemPlayerStore(database)
 	assertNoError(t, err)
-	server := PlayerServerFactory(store)
+	server, _ := PlayerServerFactory(store)
 	player := "Pepper"
 
 	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
